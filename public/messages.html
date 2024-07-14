@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mensagens Enviadas</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Mensagens Enviadas</h1>
+      <p class="sub-title">
+        Abaixo está a lista de mensagens enviadas pelos usuários.
+      </p>
+      <div id="messagesList">
+        <!-- 
+        Messagens irao aparece aqui 
+        -->
+      </div>
+      <div class="links">
+        <a href="index.html">Voltar para Formulário</a>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        loadMessages();
+      });
+
+      function loadMessages() {
+        fetch("http://localhost:3000/messages", { method: "GET" })
+          .then((response) => response.json())
+          .then((data) => {
+            const messagesList = document.getElementById("messagesList");
+            //messagesList.innerHTML = "";
+            if (data.length === 0) {
+              messagesList.innerHTML = "<p>Nenhuma mensagem encontrada.</p>";
+            } else {
+                //cria um elemento lista
+              const ul = document.createElement("ul");
+              //insere a classe na lista
+              ul.classList.add("message-list");
+              //vai percorrer a lista, e para item, vai selecionar o conteudo e index
+              data.forEach((message, index) => {
+                const li = document.createElement("li");
+                li.classList.add("message-item");
+                li.innerHTML = `<p>${index + 1} ${message.name}</p> <strong>${message.email}</strong> <br> ${message.message}`
+                ul.appendChild(li);
+              });
+              messagesList.appendChild(ul);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
